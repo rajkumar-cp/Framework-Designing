@@ -7,11 +7,17 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.testng.Assert;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 
 public class Runnable {
 	
-	public static void main(String[] args) {
+	public static WebDriver driver;
+	
+	@BeforeMethod
+	public void beforeMethod() {
 		
 		System.setProperty("webdriver.chrome.driver", "D:\\Drivers\\chromedriver.exe");
 		
@@ -21,7 +27,11 @@ public class Runnable {
  		
 		chromeOptions.addArguments(list);
 		
-		WebDriver driver=new ChromeDriver(chromeOptions);
+		driver=new ChromeDriver(chromeOptions);
+	}
+	
+	@Test
+	public void initiateTests() {
 		
 		driver.navigate().to("https://github.com/");
 		
@@ -37,6 +47,11 @@ public class Runnable {
 		
 		Assert.assertEquals(driver.findElement(By.xpath("//div[@class='container']")).getText().toString(), "Incorrect username or password.");
 
+	}
+	
+	@AfterMethod
+	public void afterMethod() {
+		
 		driver.quit();
 	}
 
