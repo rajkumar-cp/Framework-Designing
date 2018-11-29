@@ -4,21 +4,17 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.List;
-
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.ss.usermodel.Cell;
+import java.util.List; 
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
 
 
 public class Runnable {
@@ -34,13 +30,9 @@ public class Runnable {
 		try {
 		
 		System.setProperty("webdriver.chrome.driver", "D:\\Drivers\\chromedriver.exe");
-		
 		ChromeOptions chromeOptions=new ChromeOptions();
-		
 		List<String> list=Arrays.asList("start-maximized","disable-infobars");
- 		
 		chromeOptions.addArguments(list);
-		
 		driver=new ChromeDriver(chromeOptions);
 		
 		} catch(Exception e) {
@@ -55,25 +47,18 @@ public class Runnable {
 		try {
 			
 			workbook=new XSSFWorkbook(new FileInputStream(new File("src\\main\\resources\\com\\aspiresys\\resources\\Github.xlsx")));
-			
-			Sheet sheet=workbook.getSheetAt(0);
-			
-			startsteprownumber=laststeprownumber+1;
-			
-			while(!(sheet.getRow(startsteprownumber).getCell(0).getStringCellValue().equalsIgnoreCase("End"))) {
-			
-			laststeprownumber = startsteprownumber+1;
-			
-			while(!(sheet.getRow(laststeprownumber).getCell(0).getStringCellValue().contains("TC")) && !(sheet.getRow(laststeprownumber).getCell(0).getStringCellValue().contains("End"))) {
-				
-				laststeprownumber++;
-				
+			Sheet sheet=workbook.getSheetAt(0);			
+			startsteprownumber=laststeprownumber+1;			
+			while(!(sheet.getRow(startsteprownumber).getCell(0).getStringCellValue().equalsIgnoreCase("End"))) {			
+			laststeprownumber = startsteprownumber+1;			
+			while(!(sheet.getRow(laststeprownumber).getCell(0).getStringCellValue().contains("TC")) && !(sheet.getRow(laststeprownumber).getCell(0).getStringCellValue().contains("End"))) {				
+				laststeprownumber++;			
+			}		
+			laststeprownumber=laststeprownumber-1;			
+			for(int i=startsteprownumber;i<=laststeprownumber;i++) {
+			Class c=Class.forName("src\\main\\java\\com\\aspiresys\\codes\\CustomFunctions");
+		//	Method m=c.getDeclaredMethod(sheet.getRow(i).getCell(2).getStringCellValue(), driver,By,sheet.getRow(i).getCell(4).getStringCellValue());
 			}
-			
-			laststeprownumber=laststeprownumber-1;
-					
-			System.out.println(sheet.getRow(startsteprownumber).getCell(0).getStringCellValue());
-			
 			startsteprownumber=laststeprownumber+1;
 			
 			}
@@ -84,20 +69,7 @@ public class Runnable {
 			
 		}
 		
-		/*driver.navigate().to("https://github.com/");
 		
-		driver.findElement(By.xpath("//a[@href='/login']")).click();
-		
-		Assert.assertEquals(driver.getCurrentUrl(), "https://github.com/login");
-		
-		driver.findElement(By.xpath("//*[@id='login_field']")).sendKeys("rajkumar");
-		
-		driver.findElement(By.xpath("//*[@id='password']")).sendKeys("rajkumar");
-		
-		driver.findElement(By.xpath("//*[@value='Sign in']")).click();
-		
-		Assert.assertEquals(driver.findElement(By.xpath("//div[@class='container']")).getText().toString(), "Incorrect username or password.");
-*/
 	}
 	
 
