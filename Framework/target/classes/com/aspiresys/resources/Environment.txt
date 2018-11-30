@@ -1,1 +1,1 @@
-Browsertype=firefox
+Browsertype=chrome

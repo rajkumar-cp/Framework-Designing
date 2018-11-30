@@ -12,7 +12,7 @@ public class CustomFunctions {
 	
 	public static By returnElement(WebDriver driver,Sheet sheet,int rowno,int columnno) {
 		try {
-		String elem=ExcelUtils.getCellData(sheet, rowno, columnno);
+		String elem=ExcelUtils.getCellData(Runnable.workbook,0, rowno, columnno);
 		properties.load(new FileReader("src\\main\\resources\\com\\aspiresys\\resources\\Github Object Repository.txt"));
 		if(elem!="") {
 		String[] s=properties.getProperty(elem).split("\\|");

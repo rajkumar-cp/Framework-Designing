@@ -2,6 +2,7 @@ package com.aspiresys.codes;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -19,7 +20,9 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.testng.annotations.AfterMethod;
+import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
 
 
@@ -28,9 +31,34 @@ public class Runnable {
 	
 	public static WebDriver driver;
 	public static Workbook workbook;
+	public static Workbook opworkbook;
 	public static int startsteprownumber;
 	public static int laststeprownumber=0;
+	public static Object indicator=true;
 	public static Properties properties=new Properties();
+	
+	@BeforeSuite
+	public void beforesuite() {
+		try {
+			opworkbook=new XSSFWorkbook();
+			Sheet opsheet=opworkbook.createSheet();
+			
+		}catch(Exception e) {
+			System.out.println(e.getMessage());
+		}
+	}
+	
+	@AfterSuite
+	public void aftersuite() {
+		try {
+			FileOutputStream fos=new FileOutputStream(new File("C:\\Users\\rajkumar.chidambaram\\Desktop\\out.xlsx"));
+			opworkbook.write(fos);
+			fos.close();
+			opworkbook.close();
+		}catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+	}
 	
 	@BeforeMethod
 	public void beforeMethod() {
@@ -65,43 +93,37 @@ public class Runnable {
 			workbook=new XSSFWorkbook(new FileInputStream(new File("src\\main\\resources\\com\\aspiresys\\resources\\Github.xlsx")));
 			Sheet sheet=workbook.getSheetAt(0);			
 			startsteprownumber=laststeprownumber+1;			
-			while(!(ExcelUtils.getCellData(sheet, startsteprownumber, 0).equalsIgnoreCase("End"))) {			
+			while(!(ExcelUtils.getCellData(workbook,0, startsteprownumber, 0).equalsIgnoreCase("End"))) {			
 			laststeprownumber = startsteprownumber+1;			
-			while(!(ExcelUtils.getCellData(sheet, laststeprownumber, 0).contains("TC")) && !(ExcelUtils.getCellData(sheet, laststeprownumber, 0).contains("End"))) {				
+			while(!(ExcelUtils.getCellData(workbook,0, laststeprownumber, 0).contains("TC")) && !(ExcelUtils.getCellData(workbook,0,  laststeprownumber, 0).contains("End"))) {				
 				laststeprownumber++;			
 			}		
-			laststeprownumber=laststeprownumber-1;			
+			laststeprownumber=laststeprownumber-1;	
+			ExcelUtils.writeOpHeaders();
 			for(int i=startsteprownumber;i<=laststeprownumber;i++) {
-			Class<?> c=Class.forName("com.aspiresys.codes.CustomFunctions");
-			Method m=c.getDeclaredMethod(ExcelUtils.getCellData(sheet, i, 2),WebDriver.class,By.class,String.class);
-			Object indicator=m.invoke(c.newInstance(), driver,CustomFunctions.returnElement(driver, sheet, i, 3),ExcelUtils.getCellData(sheet, i, 4));
-			System.out.println(indicator);
+				while((boolean) (indicator=true)) {
+					Class<?> c=Class.forName("com.aspiresys.codes.CustomFunctions");
+					Method m=c.getDeclaredMethod(ExcelUtils.getCellData(workbook,0, i, 2),WebDriver.class,By.class,String.class);
+					indicator=m.invoke(c.newInstance(), driver,CustomFunctions.returnElement(driver, sheet, i, 3),ExcelUtils.getCellData(workbook,0, i, 4));
+					ExcelUtils.writeOpBody(i, (Boolean) indicator);
+				}
 			}
 			startsteprownumber=laststeprownumber+1;
-			
+			ExcelUtils.oprowno++;
 			}
-			
-		} catch (Exception e) {
-			
+		} catch (Exception e) {		
 			e.printStackTrace();
-			
-		}
-		
-		
+		}	
 	}
 	
 
 	@AfterMethod
 	public void afterMethod() {
 		
-		try {
-			
-			driver.quit();
-			
-		}catch(Exception e) {
-			
-			System.out.println(e.getMessage());
-			
+		try {			
+			driver.quit();			
+		}catch(Exception e) {			
+			System.out.println(e.getMessage());			
 		}
 		
 	}
