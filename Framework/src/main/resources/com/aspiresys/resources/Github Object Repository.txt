@@ -1,4 +1,4 @@
-signIn=xpath://a[@href='/login']
-username=xpath://*[@id='login_field']
-password=xpath://*[@id='password']
-signinbutton=xpath://*[@value='Sign in']
+signIn=xpath|//a[@href='/login']
+username=xpath|//*[@id='login_field']
+password=xpath|//*[@id='password']
+signinbutton=xpath|//*[@value='Sign in']
