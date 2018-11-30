@@ -42,8 +42,8 @@ public class Runnable {
 		try {
 			opworkbook=new XSSFWorkbook();
 			Sheet opsheet=opworkbook.createSheet();
-			
-		}catch(Exception e) {
+		}
+		catch(Exception e) {
 			System.out.println(e.getMessage());
 		}
 	}
@@ -69,15 +69,18 @@ public class Runnable {
 		case "ie":
 			System.setProperty("webdriver.ie.driver",System.getProperty("user.dir")+"\\src\\main\\resources\\com\\aspiresys\\resources\\iedriver.exe");
 			driver=new InternetExplorerDriver();
+			break;
 		case "chrome":
 			System.setProperty("webdriver.chrome.driver", System.getProperty("user.dir")+"\\src\\main\\resources\\com\\aspiresys\\resources\\chromedriver.exe");
 			ChromeOptions chromeOptions=new ChromeOptions();
 			List<String> list=Arrays.asList("start-maximized","disable-infobars");
 			chromeOptions.addArguments(list);
 			driver=new ChromeDriver(chromeOptions);
+			break;
 		case "firefox":
 			System.setProperty("webdriver.gecko.driver",System.getProperty("user.dir")+"\\src\\main\\resources\\com\\aspiresys\\resources\\geckodriver.exe");
 			driver=new FirefoxDriver();
+			break;
 		}		
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -101,7 +104,7 @@ public class Runnable {
 			laststeprownumber=laststeprownumber-1;	
 			ExcelUtils.writeOpHeaders();
 			for(int i=startsteprownumber;i<=laststeprownumber;i++) {
-				while((boolean) (indicator=true)) {
+				if((boolean) (indicator=true)) {
 					Class<?> c=Class.forName("com.aspiresys.codes.CustomFunctions");
 					Method m=c.getDeclaredMethod(ExcelUtils.getCellData(workbook,0, i, 2),WebDriver.class,By.class,String.class);
 					indicator=m.invoke(c.newInstance(), driver,CustomFunctions.returnElement(driver, sheet, i, 3),ExcelUtils.getCellData(workbook,0, i, 4));
