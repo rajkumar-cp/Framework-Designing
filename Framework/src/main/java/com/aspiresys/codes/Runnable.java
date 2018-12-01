@@ -51,7 +51,7 @@ public class Runnable {
 	@AfterSuite
 	public void aftersuite() {
 		try {
-			FileOutputStream fos=new FileOutputStream(new File("C:\\Users\\rajkumar.chidambaram\\Desktop\\out.xlsx"));
+			FileOutputStream fos=new FileOutputStream(new File("src\\main\\resources\\com\\aspiresys\\resources\\outputFile.xlsx"));
 			opworkbook.write(fos);
 			fos.close();
 			opworkbook.close();

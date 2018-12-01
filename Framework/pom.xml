@@ -3,6 +3,10 @@
   <groupId>com.aspiresys.project</groupId>
   <artifactId>Framework</artifactId>
   <version>0.0.1-SNAPSHOT</version>
+ <properties>
+    <maven.compiler.source>1.7</maven.compiler.source>
+    <maven.compiler.target>1.7</maven.compiler.target>
+  </properties>
   <dependencies>
   <!-- https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java -->
 <dependency>
