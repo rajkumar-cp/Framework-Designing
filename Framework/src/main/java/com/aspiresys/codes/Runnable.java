@@ -40,6 +40,7 @@ public class Runnable {
 	public static Object indicator=true;
 	public static Properties properties=new Properties();
 	public static String outputDirectory;
+	public static int currentStep;
 	
 	@BeforeSuite
 	public void beforesuite() {
@@ -111,12 +112,14 @@ public class Runnable {
 				outputDirectory=System.getProperty("user.dir")+"\\Output\\"+ExcelUtils.getCellData(workbook,0, startsteprownumber, 0)+"_"+LocalDate.now()+"_"+LocalTime.now().toString().substring(0, 5).replace(":", "H")+"M";
 				FileUtils.forceMkdir(new File(outputDirectory));
 				ExcelUtils.writeOpHeaders();
+				currentStep=1;
 				for(int i=startsteprownumber;i<=laststeprownumber;i++) {
 					if((boolean) (indicator=true)) {
 						Class<?> c=Class.forName("com.aspiresys.codes.CustomFunctions");
 						Method m=c.getDeclaredMethod(ExcelUtils.getCellData(workbook,0, i, 3),WebDriver.class,By.class,String.class);
 						indicator=m.invoke(c.newInstance(), driver,CustomFunctions.returnElement(driver, sheet, i, 4),ExcelUtils.getCellData(workbook,0, i, 5));
 						ExcelUtils.writeOpBody(i, (Boolean) indicator);
+						currentStep++;
 					}
 				}
 				ExcelUtils.oprowno++;

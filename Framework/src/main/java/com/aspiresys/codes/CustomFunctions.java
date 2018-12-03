@@ -1,9 +1,15 @@
 package com.aspiresys.codes;
 
+import java.io.File;
 import java.io.FileReader;
 import java.util.Properties;
+
+import org.apache.commons.io.FileUtils;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.testng.Assert;
 
@@ -46,6 +52,7 @@ public class CustomFunctions {
 	public static Boolean clickElement(WebDriver driver,By element,String value) {
 		try {
 		driver.findElement(element).click();
+		takeScreenshot(driver, element, value);
 		return true;
 		}catch (Exception e) {
 			System.out.println(e.getMessage());
@@ -55,6 +62,7 @@ public class CustomFunctions {
 	public static Boolean navigateToURL(WebDriver driver,By element,String value) {
 		try {
 		driver.navigate().to(value);
+		takeScreenshot(driver, element, value);
 		return true;
 	}catch (Exception e) {
 		System.out.println(e.getMessage());
@@ -64,6 +72,7 @@ public class CustomFunctions {
 	public static Boolean verifyURL(WebDriver driver,By element,String value) {
 		try {
 		Assert.assertEquals(driver.getCurrentUrl(), value);
+		takeScreenshot(driver, element, value);
 		return true;
 		}catch (Exception e) {
 			System.out.println(e.getMessage());
@@ -73,10 +82,31 @@ public class CustomFunctions {
 	public static Boolean sendKeys(WebDriver driver,By element,String value) {
 		try {
 		driver.findElement(element).sendKeys(value);
+		takeScreenshot(driver, element, value);
 		return true;
 		}catch (Exception e) {
 			System.out.println(e.getMessage());
 			return false;
+		}
+	}
+	public static void takeScreenshot(WebDriver driver,By element,String value) {
+		try {
+			if(element!=null) {
+			 if(driver.findElements(element).size()!=0) {
+				((JavascriptExecutor)driver).executeScript("arguments[0].setAttribute('style', 'background: yellow; border: 2px solid red;');", driver.findElement(element));
+				TakesScreenshot scrShot =((TakesScreenshot)driver);
+		        File SrcFile=scrShot.getScreenshotAs(OutputType.FILE);
+		        File DestFile=new File(Runnable.outputDirectory+"//Step"+Runnable.currentStep+".png");
+		        FileUtils.copyFile(SrcFile, DestFile);
+			}}
+			else {
+				TakesScreenshot scrShot =((TakesScreenshot)driver);
+		        File SrcFile=scrShot.getScreenshotAs(OutputType.FILE);
+		        File DestFile=new File(Runnable.outputDirectory+"//Step"+Runnable.currentStep+".png");
+		        FileUtils.copyFile(SrcFile, DestFile);
+			}
+			}catch(Exception e) {
+			System.out.println(e.getMessage());	
 		}
 	}
 }
