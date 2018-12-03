@@ -39,6 +39,7 @@ public class Runnable {
 	public static int laststeprownumber=0;
 	public static Object indicator=true;
 	public static Properties properties=new Properties();
+	public static String outputDirectory;
 	
 	@BeforeSuite
 	public void beforesuite() {
@@ -107,7 +108,8 @@ public class Runnable {
 			}		
 			laststeprownumber=laststeprownumber-1;	
 			if(ExcelUtils.getCellData(workbook,0, startsteprownumber, 2).equalsIgnoreCase("Y")) {
-				FileUtils.forceMkdir(new File(System.getProperty("user.dir")+"\\Output\\"+ExcelUtils.getCellData(workbook,0, startsteprownumber, 0)+"_"+LocalDate.now()+"_"+LocalTime.now().toString().substring(0, 5).replace(":", "H")+"M"));
+				outputDirectory=System.getProperty("user.dir")+"\\Output\\"+ExcelUtils.getCellData(workbook,0, startsteprownumber, 0)+"_"+LocalDate.now()+"_"+LocalTime.now().toString().substring(0, 5).replace(":", "H")+"M";
+				FileUtils.forceMkdir(new File(outputDirectory));
 				ExcelUtils.writeOpHeaders();
 				for(int i=startsteprownumber;i<=laststeprownumber;i++) {
 					if((boolean) (indicator=true)) {
