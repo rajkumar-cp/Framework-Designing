@@ -70,9 +70,9 @@ public class ExcelUtils {
 			Runnable.opworkbook.getSheetAt(0).getRow(oprowno).createCell(5).setCellStyle(style);
 			Runnable.opworkbook.getSheetAt(0).getRow(oprowno).getCell(0).setCellValue(getCellData(Runnable.workbook, 0, rowno, 0));
 			Runnable.opworkbook.getSheetAt(0).getRow(oprowno).getCell(1).setCellValue(getCellData(Runnable.workbook, 0, rowno, 1));
-			Runnable.opworkbook.getSheetAt(0).getRow(oprowno).getCell(2).setCellValue(getCellData(Runnable.workbook, 0, rowno, 2));
-			Runnable.opworkbook.getSheetAt(0).getRow(oprowno).getCell(3).setCellValue(getCellData(Runnable.workbook, 0, rowno, 3));
-			Runnable.opworkbook.getSheetAt(0).getRow(oprowno).getCell(4).setCellValue(getCellData(Runnable.workbook, 0, rowno, 4));
+			Runnable.opworkbook.getSheetAt(0).getRow(oprowno).getCell(2).setCellValue(getCellData(Runnable.workbook, 0, rowno, 3));
+			Runnable.opworkbook.getSheetAt(0).getRow(oprowno).getCell(3).setCellValue(getCellData(Runnable.workbook, 0, rowno, 4));
+			Runnable.opworkbook.getSheetAt(0).getRow(oprowno).getCell(4).setCellValue(getCellData(Runnable.workbook, 0, rowno, 5));
 			CellStyle style2 = Runnable.opworkbook.createCellStyle();
 			if(bool) {	
 				style2.setBorderBottom(XSSFCellStyle.BORDER_MEDIUM);

@@ -6,10 +6,13 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -42,6 +45,7 @@ public class Runnable {
 		try {
 			opworkbook=new XSSFWorkbook();
 			Sheet opsheet=opworkbook.createSheet();
+			FileUtils.forceMkdir(new File(System.getProperty("user.dir")+"\\Output"));
 		}
 		catch(Exception e) {
 			System.out.println(e.getMessage());
@@ -102,17 +106,20 @@ public class Runnable {
 				laststeprownumber++;			
 			}		
 			laststeprownumber=laststeprownumber-1;	
-			ExcelUtils.writeOpHeaders();
-			for(int i=startsteprownumber;i<=laststeprownumber;i++) {
-				if((boolean) (indicator=true)) {
-					Class<?> c=Class.forName("com.aspiresys.codes.CustomFunctions");
-					Method m=c.getDeclaredMethod(ExcelUtils.getCellData(workbook,0, i, 2),WebDriver.class,By.class,String.class);
-					indicator=m.invoke(c.newInstance(), driver,CustomFunctions.returnElement(driver, sheet, i, 3),ExcelUtils.getCellData(workbook,0, i, 4));
-					ExcelUtils.writeOpBody(i, (Boolean) indicator);
+			if(ExcelUtils.getCellData(workbook,0, startsteprownumber, 2).equalsIgnoreCase("Y")) {
+				FileUtils.forceMkdir(new File(System.getProperty("user.dir")+"\\Output\\"+ExcelUtils.getCellData(workbook,0, startsteprownumber, 0)+"_"+LocalDate.now()+"_"+LocalTime.now().toString().substring(0, 5).replace(":", "H")+"M"));
+				ExcelUtils.writeOpHeaders();
+				for(int i=startsteprownumber;i<=laststeprownumber;i++) {
+					if((boolean) (indicator=true)) {
+						Class<?> c=Class.forName("com.aspiresys.codes.CustomFunctions");
+						Method m=c.getDeclaredMethod(ExcelUtils.getCellData(workbook,0, i, 3),WebDriver.class,By.class,String.class);
+						indicator=m.invoke(c.newInstance(), driver,CustomFunctions.returnElement(driver, sheet, i, 4),ExcelUtils.getCellData(workbook,0, i, 5));
+						ExcelUtils.writeOpBody(i, (Boolean) indicator);
+					}
 				}
+				ExcelUtils.oprowno++;
 			}
 			startsteprownumber=laststeprownumber+1;
-			ExcelUtils.oprowno++;
 			}
 		} catch (Exception e) {		
 			e.printStackTrace();
