@@ -7,6 +7,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.testng.Assert;
 
+//comment added
+
 public class CustomFunctions {
 	public static Properties properties=new Properties();
 	
