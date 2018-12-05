@@ -13,7 +13,7 @@ import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import com.relevantcodes.extentreports.LogStatus;
 
-//comment added
+//comment added again
 
 public class CustomFunctions {
 	public static Properties properties=new Properties();
