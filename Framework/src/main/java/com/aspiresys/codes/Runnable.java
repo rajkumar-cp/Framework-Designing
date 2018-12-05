@@ -28,7 +28,10 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
 
+import com.relevantcodes.extentreports.ExtentReports;
+import com.relevantcodes.extentreports.ExtentTest;
 
+//Comment added
 
 public class Runnable {
 	
@@ -37,10 +40,15 @@ public class Runnable {
 	public static Workbook opworkbook;
 	public static int startsteprownumber;
 	public static int laststeprownumber=0;
-	public static Object indicator=true;
+	public static int rowNo;
+	public static Object indicator;
 	public static Properties properties=new Properties();
 	public static String outputDirectory;
+	public static int currentStep;
+	public static ExtentReports eReport;
+	public static ExtentTest eTest;
 	
+	@SuppressWarnings("unused")
 	@BeforeSuite
 	public void beforesuite() {
 		try {
@@ -108,17 +116,24 @@ public class Runnable {
 			}		
 			laststeprownumber=laststeprownumber-1;	
 			if(ExcelUtils.getCellData(workbook,0, startsteprownumber, 2).equalsIgnoreCase("Y")) {
+				indicator=true;
+				eReport=new ExtentReports(System.getProperty("user.dir")+"\\"+ExcelUtils.getCellData(workbook,0, startsteprownumber, 0)+".html");
+				eTest=eReport.startTest(ExcelUtils.getCellData(workbook,0, startsteprownumber, 1), ExcelUtils.getCellData(workbook,0, startsteprownumber, 3));
 				outputDirectory=System.getProperty("user.dir")+"\\Output\\"+ExcelUtils.getCellData(workbook,0, startsteprownumber, 0)+"_"+LocalDate.now()+"_"+LocalTime.now().toString().substring(0, 5).replace(":", "H")+"M";
 				FileUtils.forceMkdir(new File(outputDirectory));
 				ExcelUtils.writeOpHeaders();
-				for(int i=startsteprownumber;i<=laststeprownumber;i++) {
-					if((boolean) (indicator=true)) {
+				currentStep=1;
+				for(rowNo=startsteprownumber;rowNo<=laststeprownumber;rowNo++) {
+					if((boolean) indicator==true) {
 						Class<?> c=Class.forName("com.aspiresys.codes.CustomFunctions");
-						Method m=c.getDeclaredMethod(ExcelUtils.getCellData(workbook,0, i, 3),WebDriver.class,By.class,String.class);
-						indicator=m.invoke(c.newInstance(), driver,CustomFunctions.returnElement(driver, sheet, i, 4),ExcelUtils.getCellData(workbook,0, i, 5));
-						ExcelUtils.writeOpBody(i, (Boolean) indicator);
+						Method m=c.getDeclaredMethod(ExcelUtils.getCellData(workbook,0, rowNo, 3),WebDriver.class,By.class,String.class);
+						indicator=m.invoke(c.newInstance(), driver,CustomFunctions.returnElement(driver, sheet, rowNo, 4),ExcelUtils.getCellData(workbook,0, rowNo, 5));
+						ExcelUtils.writeOpBody(rowNo, (Boolean) indicator);
+						currentStep++;
 					}
 				}
+				eReport.endTest(eTest);
+				eReport.flush();
 				ExcelUtils.oprowno++;
 			}
 			startsteprownumber=laststeprownumber+1;
